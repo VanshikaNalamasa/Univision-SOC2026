@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Uni-Vision Dashboard</title>
+  <style>
+    body { font-family: sans-serif; background: #0f0f0f; color: #eee; padding: 2rem; }
+    h1 { color: #7ee8a2; }
+    .stages { display: flex; gap: 1rem; margin: 2rem 0; }
+    .card { background: #1e1e1e; border-radius: 8px; padding: 1.5rem; flex: 1; border: 1px solid #333; }
+    .card h2 { margin: 0 0 0.5rem; font-size: 1rem; color: #aaa; }
+    .status { font-size: 1.3rem; font-weight: bold; }
+    .waiting  { color: #888; }
+    .running  { color: #f0c040; }
+    .done     { color: #7ee8a2; }
+    button { margin-top: 1rem; padding: 0.5rem 1.5rem; background: #7ee8a2;
+             color: #000; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+    #events { margin-top: 2rem; }
+    .event { background: #1e1e1e; border-left: 3px solid #7ee8a2;
+             padding: 0.5rem 1rem; margin: 0.5rem 0; border-radius: 4px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>Uni-Vision Pipeline Dashboard</h1>
+
+  <div class="stages">
+    <div class="card">
+      <h2>Stage 1 — Input</h2>
+      <div class="status" id="s1">⏳ Waiting</div>
+    </div>
+    <div class="card">
+      <h2>Stage 2 — Detection</h2>
+      <div class="status" id="s2">⏳ Waiting</div>
+    </div>
+    <div class="card">
+      <h2>Stage 3 — Output</h2>
+      <div class="status" id="s3">⏳ Waiting</div>
+    </div>
+  </div>
+
+  <button onclick="runPipeline()">Run Pipeline</button>
+
+  <div id="events"><h2>Events</h2></div>
+
+  <script>
+    function setStatus(id, text, cls) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = "status " + cls;
+    }
+
+    function addEvent(msg) {
+      const div = document.createElement("div");
+      div.className = "event";
+      div.textContent = new Date().toLocaleTimeString() + " — " + msg;
+      document.getElementById("events").appendChild(div);
+    }
+
+    function runPipeline() {
+      setStatus("s1", "🟡 Running", "running");
+      addEvent("Input stage started");
+
+      setTimeout(() => {
+        setStatus("s1", "✅ Done", "done");
+        setStatus("s2", "🟡 Running", "running");
+        addEvent("Frame captured. Detection started.");
+      }, 1000);
+
+      setTimeout(() => {
+        setStatus("s2", "✅ Done", "done");
+        setStatus("s3", "🟡 Running", "running");
+        addEvent("3 objects detected. Writing output.");
+      }, 2200);
+
+      setTimeout(() => {
+        setStatus("s3", "✅ Done", "done");
+        addEvent("Pipeline complete. Result saved.");
+      }, 3200);
+    }
+  </script>
+</body>
+</html>
